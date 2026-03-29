@@ -1,0 +1,7 @@
+#include <windows.h>
+
+LOADING RCDATA "../asi_code/Res/loading.ogg"
+NORADIO_ID RCDATA "../asi_code/Res/rec_gan.ogg"
+NORADIO_EN RCDATA "../asi_code/Res/rec_baby.ogg"
+NOICONN_ID RCDATA "../asi_code/Res/noconn_gan.ogg"
+NOICONN_EN RCDATA "../asi_code/Res/noconn_baby.ogg"
