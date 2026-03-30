@@ -11,38 +11,24 @@
 #include <stdexcept>
 #include <bits/shared_ptr.h>
 
-// BASS Prototypes
-typedef BOOL (WINAPI *tBASS_SetConfig)(DWORD, DWORD);
-typedef DWORD (WINAPI *tBASS_GetVersion)();
-typedef BOOL (WINAPI *tBASS_Init)(int, DWORD, DWORD, HWND, void*);
-typedef BOOL (WINAPI *tBASS_Free)();
-typedef HSTREAM (WINAPI *tBASS_StreamCreateFile)(BOOL, void*, QWORD, QWORD, DWORD);
-typedef HSTREAM (WINAPI *tBASS_StreamCreateURL)(const char*, DWORD, DWORD, void*, void*);
-typedef BOOL (WINAPI *tBASS_StreamFree)(HSTREAM);
-typedef BOOL (WINAPI *tBASS_ChannelPlay)(DWORD, BOOL);
-typedef BOOL (WINAPI *tBASS_ChannelStop)(DWORD);
-typedef BOOL (WINAPI *tBASS_ChannelSetAttribute)(DWORD, DWORD, float);
-typedef QWORD (WINAPI *tBASS_StreamGetFilePosition)(HSTREAM, DWORD);
-typedef int (WINAPI *tBASS_ErrorGetCode)();
-typedef HPLUGIN (WINAPI *tBASS_PluginLoad)(const char*, DWORD);
-typedef BOOL (WINAPI *tBASS_PluginFree)(HPLUGIN);
-typedef DWORD (WINAPI *tBASS_ChannelIsActive)(DWORD);
+#define NOBASSOVERLOADS
+#include "bass.h"
 
-static tBASS_SetConfig pBASS_SetConfig;
-static tBASS_GetVersion pBASS_GetVersion;
-static tBASS_Init pBASS_Init;
-static tBASS_Free pBASS_Free;
-static tBASS_StreamCreateFile pBASS_StreamCreateFile;
-static tBASS_StreamCreateURL pBASS_StreamCreateURL;
-static tBASS_StreamFree pBASS_StreamFree;
-static tBASS_ChannelPlay pBASS_ChannelPlay;
-static tBASS_ChannelStop pBASS_ChannelStop;
-static tBASS_ChannelSetAttribute pBASS_ChannelSetAttribute;
-static tBASS_StreamGetFilePosition pBASS_StreamGetFilePosition;
-static tBASS_ErrorGetCode pBASS_ErrorGetCode;
-static tBASS_PluginLoad pBASS_PluginLoad;
-static tBASS_PluginFree pBASS_PluginFree;
-static tBASS_ChannelIsActive pBASS_ChannelIsActive;
+static typeof(&BASS_SetConfig) pBASS_SetConfig;
+static typeof(&BASS_GetVersion) pBASS_GetVersion;
+static typeof(&BASS_Init) pBASS_Init;
+static typeof(&BASS_Free) pBASS_Free;
+static typeof(&BASS_StreamCreateFile) pBASS_StreamCreateFile;
+static typeof(&BASS_StreamCreateURL) pBASS_StreamCreateURL;
+static typeof(&BASS_StreamFree) pBASS_StreamFree;
+static typeof(&BASS_ChannelPlay) pBASS_ChannelPlay;
+static typeof(&BASS_ChannelStop) pBASS_ChannelStop;
+static typeof(&BASS_ChannelSetAttribute) pBASS_ChannelSetAttribute;
+static typeof(&BASS_StreamGetFilePosition) pBASS_StreamGetFilePosition;
+static typeof(&BASS_ErrorGetCode) pBASS_ErrorGetCode;
+static typeof(&BASS_PluginLoad) pBASS_PluginLoad;
+static typeof(&BASS_PluginFree) pBASS_PluginFree;
+static typeof(&BASS_ChannelIsActive) pBASS_ChannelIsActive;
 
 static HMODULE hBass = nullptr;
 
@@ -254,11 +240,11 @@ static void StreamChannel_WaitBuffer(const HSTREAM stream, const DWORD threshold
     if (stream == 0) return;
 
     QWORD total = pBASS_StreamGetFilePosition(stream, BASS_FILEPOS_END);
-    if (total == DW_ERROR) return;
+    if (static_cast<long long>(total) == -1) return;
 
     while (!StreamThreadCancellation) {
         QWORD buffered = pBASS_StreamGetFilePosition(stream, BASS_FILEPOS_BUFFER);
-        if (buffered == DW_ERROR) break;
+        if (static_cast<long long>(buffered) == -1) break;
         if (static_cast<DWORD>(buffered * 100 / total) > thresholdPct) break;
 
         if (GetForegroundWindow() == GTAWnd) {

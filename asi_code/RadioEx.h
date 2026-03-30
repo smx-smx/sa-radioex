@@ -31,22 +31,6 @@ enum class eRadioExState {
     S_ERROR
 };
 
-#define BASSVERSION 0x204
-#define BASS_OK 0
-#define BASS_ERROR_ALREADY 14
-#define BASS_SAMPLE_LOOP 4
-#define BASS_STREAM_AUTOFREE 0x40000
-#define BASS_STREAM_BLOCK 0x100000
-#define BASS_ATTRIB_VOL 2
-#define BASS_CONFIG_NET_PLAYLIST 21
-#define BASS_CONFIG_NET_PREBUF 15
-#define BASS_FILEPOS_BUFFER 5
-#define BASS_FILEPOS_END 2
-#define BASS_FILEPOS_CONNECTED 4
-#define BASS_ACTIVE_PLAYING 1
-
-#define DW_ERROR ((DWORD)-1)
-
 typedef struct {
     HRSRC Handle;
     void* Location;
