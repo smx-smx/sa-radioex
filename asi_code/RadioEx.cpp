@@ -423,7 +423,7 @@ char __stdcall *my_GetRadioStationName(char index){
     if(index < 0 || index >= Radio.size()){
         return hk_GetRadioStationName.origFunc(index);
     }
-    return GetRadioName(index - 1);
+    return GetRadioName(index);
 }
 
 bool InitAsi() {
